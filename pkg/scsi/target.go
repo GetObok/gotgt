@@ -22,7 +22,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gostor/gotgt/pkg/api"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 func (s *SCSITargetService) NewSCSITarget(tid int, driverName, name string) (*api.SCSITarget, error) {
@@ -43,6 +43,15 @@ func (s *SCSITargetService) NewSCSITarget(tid int, driverName, name string) (*ap
 	target.LUN0 = NewLUN0()
 	target.TargetPortGroups = append(target.TargetPortGroups, tpg)
 	return target, nil
+}
+
+func (s *SCSITargetService) RereadTargetLUNMap() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	for _, tgt := range s.Targets {
+		tgt.Devices = GetTargetLUNMap(tgt.Name)
+	}
 }
 
 func FindTargetGroup(target *api.SCSITarget, relPortID uint16) uint16 {
