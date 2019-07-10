@@ -357,10 +357,10 @@ func (s *ISCSITargetDriver) iscsiExecLogin(conn *iscsiConnection) error {
 	conn.maxRecvDataSegmentLength = MaxRecvDataSegmentLength
 	conn.maxSeqCount = conn.maxBurstLength / conn.maxRecvDataSegmentLength
 
-	if conn.loginParam.iniCSG == SecurityNegotiation {
-		conn.state = CONN_STATE_EXIT
-		return fmt.Errorf("Doesn't support Auth")
-	}
+	//if conn.loginParam.iniCSG == SecurityNegotiation {
+	//	conn.state = CONN_STATE_EXIT
+	//	return fmt.Errorf("Doesn't support Auth")
+	//}
 
 	_, err := conn.processLoginData()
 	if err != nil {

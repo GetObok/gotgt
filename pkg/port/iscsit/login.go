@@ -138,13 +138,13 @@ func (conn *iscsiConnection) processLoginData() ([]util.KeyValue, error) {
 			}
 		} else {
 			//Unknown Key, reject it
-			return negoKV, fmt.Errorf("Unknowen Nego KV [%s:%s]", key, val)
+			return negoKV, fmt.Errorf("Unknown Nego KV [%s:%s]", key, val)
 		}
 	}
 
 	if kvChanges == 0 {
-		if (conn.loginParam.iniNSG == FullFeaturePhase) && conn.loginParam.iniTrans {
-			conn.loginParam.tgtNSG = FullFeaturePhase
+		if conn.loginParam.iniTrans {
+			conn.loginParam.tgtNSG = conn.loginParam.iniNSG
 			conn.loginParam.tgtTrans = true
 		} else {
 			//Currently, we just reject these kind of cases

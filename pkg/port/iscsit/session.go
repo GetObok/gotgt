@@ -72,6 +72,7 @@ const (
 	ISCSI_PARAM_FIRST_LOCAL
 	ISCSI_PARAM_MAX_XMIT_DLENGTH = ISCSI_PARAM_FIRST_LOCAL
 	ISCSI_PARAM_MAX_QUEUE_CMD
+	ISCSI_PARAM_AUTH_METHOD
 	/* must always be last */
 	ISCSI_PARAM_MAX
 )
@@ -232,6 +233,8 @@ var sessionKeys map[string]*iscsiSessionKeys = map[string]*iscsiSessionKeys{
 	"MaxXmitDataSegmentLength": {ISCSI_PARAM_MAX_XMIT_DLENGTH, true, 8192, 512, 16777215, numberKeyConv, numberKeyInConv},
 	// ISCSI_PARAM_MAX_QUEUE_CMD
 	"MaxQueueCmd": {ISCSI_PARAM_MAX_QUEUE_CMD, true, MAX_QUEUE_CMD_DEF, MAX_QUEUE_CMD_MIN, MAX_QUEUE_CMD_MAX, numberKeyConv, numberKeyInConv},
+	// ISCSI_PARAM_AUTH_METHOD
+	"AuthMethod": {ISCSI_PARAM_AUTH_METHOD, false, DIGEST_NONE, DIGEST_NONE, DIGEST_ALL, digestKeyConv, digestKeyInConv},
 }
 
 // Session is an iSCSI session.
