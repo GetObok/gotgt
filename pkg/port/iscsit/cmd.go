@@ -468,11 +468,10 @@ func (m *ISCSICommand) r2tRespBytes() []byte {
 	// rfc7143 11.8
 	buf := bytes.Buffer{}
 	buf.WriteByte(byte(OpReady))
-	var b byte
-	if m.Final {
-		b |= 0x80
-	}
-	buf.WriteByte(b)
+
+	// reserved (R2T always has Final flag)
+	buf.WriteByte(0x80)
+
 	buf.WriteByte(0x00)
 	buf.WriteByte(0x00)
 
