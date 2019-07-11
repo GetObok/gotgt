@@ -58,7 +58,6 @@ type iscsiConnection struct {
 	cid       uint16
 	rxIOState int
 	txIOState int
-	refcount  int
 	conn      net.Conn
 
 	rxBuffer []byte
@@ -68,16 +67,9 @@ type iscsiConnection struct {
 
 	loginParam *iscsiLoginParam
 
-	// StatSN - the status sequence number on this connection
-	statSN uint32
-	// ExpStatSN - the expected status sequence number on this connection
-	expStatSN uint32
-	// CmdSN - the command sequence number at the target
-	cmdSN uint32
 	// ExpCmdSN - the next expected command sequence number at the target
 	expCmdSN uint32
-	// MaxCmdSN - the maximum CmdSN acceptable at the target from this initiator
-	maxCmdSN                 uint32
+
 	maxRecvDataSegmentLength uint32
 	maxBurstLength           uint32
 	maxSeqCount              uint32
@@ -113,7 +105,6 @@ type iscsiTask struct {
 
 func (c *iscsiConnection) init() {
 	c.state = CONN_STATE_FREE
-	c.refcount = 1
 	c.readLock = new(sync.RWMutex)
 	c.loginParam.sessionParam = []ISCSISessionParam{}
 	c.loginParam.tgtCSG = LoginOperationalNegotiation
@@ -149,7 +140,6 @@ func (conn *iscsiConnection) ReInstatement(newConn *iscsiConnection) {
 func (conn *iscsiConnection) buildRespPackage(oc OpCode, task *iscsiTask) error {
 	conn.txTask = &iscsiTask{conn: conn, cmd: conn.req, tag: conn.req.TaskTag, scmd: &api.SCSICommand{}}
 	conn.txIOState = IOSTATE_TX_BHS
-	conn.statSN += 1
 	if task == nil {
 		task = conn.rxTask
 	}
